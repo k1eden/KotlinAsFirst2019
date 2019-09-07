@@ -3,7 +3,10 @@
 package lesson2.task1
 
 import lesson1.task1.discriminant
+import lesson1.task1.sqr
+import kotlin.math.abs
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
@@ -63,7 +66,16 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String = TODO()
+fun ageDescription(age: Int): String {
+    return when {
+        age in 5..20 -> "$age лет"
+        age % 10 == 1 && age !in 10..20 && age !in 105..120 -> "$age год"
+        (age % 10 == 2 || age % 10 == 3 || age % 10 == 4) && age !in 10..20 && age !in 105..120 -> "$age года"
+        age in 105..120 -> "$age лет"
+        age % 10 == 0 || age % 10 == 5 || age % 10 == 6 || age % 10 == 7 || age % 10 == 8 || age % 10 == 9 -> "$age лет"
+        else -> "Некоректный возраст"
+    }
+}
 
 /**
  * Простая
@@ -76,7 +88,17 @@ fun timeForHalfWay(
     t1: Double, v1: Double,
     t2: Double, v2: Double,
     t3: Double, v3: Double
-): Double = TODO()
+): Double {
+    var s = ((v1 * t1) + (v2 * t2) + (v3 * t3)) / 2
+    return when {
+        t1 * v1 > s -> (s / v1)
+        (t1 * v1 < s) && (t1 * v1 + t2 * v2 > s) -> (t1 + (s - t1 * v1) / v2)
+        (t1 * v1) + (t2 * v2) < s -> (t1 + t2 + (s - (v1 * t1) - (v2 * t2)) / v3)
+        else -> 0.0
+    }
+}
+
+
 
 /**
  * Простая
@@ -91,7 +113,15 @@ fun whichRookThreatens(
     kingX: Int, kingY: Int,
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
-): Int = TODO()
+): Int {
+    if ((kingX == rookX1 || kingY == rookY1) && (kingX !== rookX2 && kingY !== rookY2)) return 1
+    if ((kingX == rookX2 || kingY == rookY2) && (kingX !== rookX1 && kingY !== rookY1)) return 2
+    if ((kingX == rookX1 && kingX == rookX2) || (kingY == rookY1 && kingY == rookY2) || (kingX == rookY1 && kingY == rookX2) || (kingX == rookY2 && kingX == rookY1)) return 3
+    if (kingX == rookX2 && kingY == rookY1) return 3
+    else return 0
+}
+
+
 
 /**
  * Простая
@@ -107,7 +137,14 @@ fun rookOrBishopThreatens(
     kingX: Int, kingY: Int,
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
-): Int = TODO()
+): Int {
+    return when {
+        ((kingX == rookX) || (kingY == rookY)) && (abs(bishopX - kingX) !== abs(bishopY - kingY)) -> 1
+        (abs(bishopX - kingX) == abs(bishopY - kingY)) && (kingX !== rookX) && (kingY !== rookY) -> 2
+        ((kingX == rookX) || (kingY == rookY)) && (abs(bishopX - kingX) == (abs(bishopY - kingY))) -> 3
+        else -> 0
+    }
+}
 
 /**
  * Простая
@@ -117,7 +154,21 @@ fun rookOrBishopThreatens(
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
+fun triangleKind(a: Double, b: Double, c: Double): Int {
+    return when {
+        (c > a) && (c >= b) && (sqr(c) == sqr(a) + sqr(b)) && (c < a + b) && (c > a - b) -> 1
+        (a > c) && (a >= b) && (sqr(a) == sqr(c) + sqr(b)) && (a < c + b) && (a > c - b) -> 1
+        (b > a) && (b >= c) && (sqr(b) == sqr(a) + sqr(c)) && (b < a + c) && (b > a - c) -> 1
+        (c > a) && (c >= b) && (sqr(c) < sqr(a) + sqr(b)) && (c < a + b) && (c > a - b) -> 0
+        (a > c) && (a >= b) && (sqr(a) < sqr(c) + sqr(b)) && (a < c + b) && (a > c - b) -> 0
+        (b > a) && (b >= c) && (sqr(b) < sqr(a) + sqr(c)) && (b < a + c) && (b > c - a) -> 0
+        (c > a) && (c >= b) && (sqr(c) > sqr(a) + sqr(b)) && (c < a + b) && (c > a - b) -> 2
+        (a > c) && (a >= b) && (sqr(a) > sqr(c) + sqr(b)) && (a < c + b) && (a > c - b) -> 2
+        (b > a) && (b >= c) && (sqr(b) > sqr(a) + sqr(c)) && (b < a + c) && (b > a - c) -> 2
+        else -> -1
+    }
+}
+
 
 /**
  * Средняя
@@ -127,4 +178,16 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = TODO()
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
+    return when {
+        (c < b) && (a < c) && (b < d) -> b - c
+        (d < b) && (c < d) && (a < c) -> d - c
+        (a < d) && (c < a) && (d < b) -> d - a
+        (b < d) && (a < b) && (c < a) -> b - a
+        (b < d) && (c < b) && (a < c) -> b - c
+        (d < b) && (a < d) && (c < a) -> d - a
+        ((b == c) && (a < b) && (c < d)) || ((d == a) && (a < b) && (c < d)) -> 0
+        else -> -1
+    }
+}
+
