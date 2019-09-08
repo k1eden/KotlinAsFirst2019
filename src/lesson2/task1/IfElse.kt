@@ -6,7 +6,6 @@ import lesson1.task1.discriminant
 import lesson1.task1.sqr
 import kotlin.math.abs
 import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
@@ -89,7 +88,7 @@ fun timeForHalfWay(
     t2: Double, v2: Double,
     t3: Double, v3: Double
 ): Double {
-    var s = ((v1 * t1) + (v2 * t2) + (v3 * t3)) / 2
+    val s = ((v1 * t1) + (v2 * t2) + (v3 * t3)) / 2
     return when {
         t1 * v1 > s -> (s / v1)
         (t1 * v1 < s) && (t1 * v1 + t2 * v2 > s) -> (t1 + (s - t1 * v1) / v2)
@@ -114,11 +113,13 @@ fun whichRookThreatens(
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
 ): Int {
-    if ((kingX == rookX1 || kingY == rookY1) && (kingX !== rookX2 && kingY !== rookY2)) return 1
-    if ((kingX == rookX2 || kingY == rookY2) && (kingX !== rookX1 && kingY !== rookY1)) return 2
-    if ((kingX == rookX1 && kingX == rookX2) || (kingY == rookY1 && kingY == rookY2) || (kingX == rookY1 && kingY == rookX2) || (kingX == rookY2 && kingX == rookY1)) return 3
-    if (kingX == rookX2 && kingY == rookY1) return 3
-    else return 0
+    return when {
+        ((kingX == rookX1 || kingY == rookY1) && (kingX != rookX2 && kingY != rookY2)) -> 1
+        ((kingX == rookX2 || kingY == rookY2) && (kingX != rookX1 && kingY != rookY1)) -> 2
+        ((kingX == rookX1 && kingX == rookX2) || (kingY == rookY1 && kingY == rookY2) || (kingX == rookY1 && kingY == rookX2) || (kingX == rookY2 && kingX == rookY1)) -> 3
+        (kingX == rookX2 && kingY == rookY1) || ((kingX == rookX1) && (kingY == rookY2)) -> 3
+        else -> 0
+    }
 }
 
 
@@ -139,8 +140,8 @@ fun rookOrBishopThreatens(
     bishopX: Int, bishopY: Int
 ): Int {
     return when {
-        ((kingX == rookX) || (kingY == rookY)) && (abs(bishopX - kingX) !== abs(bishopY - kingY)) -> 1
-        (abs(bishopX - kingX) == abs(bishopY - kingY)) && (kingX !== rookX) && (kingY !== rookY) -> 2
+        ((kingX == rookX) || (kingY == rookY)) && (abs(bishopX - kingX) != abs(bishopY - kingY)) -> 1
+        (abs(bishopX - kingX) == abs(bishopY - kingY)) && (kingX != rookX) && (kingY != rookY) -> 2
         ((kingX == rookX) || (kingY == rookY)) && (abs(bishopX - kingX) == (abs(bishopY - kingY))) -> 3
         else -> 0
     }
@@ -165,6 +166,7 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
         (c > a) && (c >= b) && (sqr(c) > sqr(a) + sqr(b)) && (c < a + b) && (c > a - b) -> 2
         (a > c) && (a >= b) && (sqr(a) > sqr(c) + sqr(b)) && (a < c + b) && (a > c - b) -> 2
         (b > a) && (b >= c) && (sqr(b) > sqr(a) + sqr(c)) && (b < a + c) && (b > a - c) -> 2
+        (a == b) && (b == c) -> 0
         else -> -1
     }
 }
@@ -187,6 +189,7 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
         (b < d) && (c < b) && (a < c) -> b - c
         (d < b) && (a < d) && (c < a) -> d - a
         ((b == c) && (a < b) && (c < d)) || ((d == a) && (a < b) && (c < d)) -> 0
+        (a == b) && (b == c) && (c == d) -> 0
         else -> -1
     }
 }
