@@ -4,6 +4,7 @@ package lesson2.task2
 
 import lesson1.task1.sqr
 import kotlin.math.abs
+import kotlin.math.sqrt
 
 /**
  * Пример
@@ -49,7 +50,7 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
  */
 fun daysInMonth(month: Int, year: Int): Int {
     return when {
-        ((year % 4 == 0) && (month == 2) && year != 1900) || (year == 1600 && month == 2) || (year == 2000 && month == 2) || (year == 2400 && month == 2) -> 29
+        ((year % 400 == 0) && (month == 2)) || ((year % 4 == 0) && (year % 100 != 0)) -> 29
         (year % 4 != 0) && ((month == 1) || (month == 3) || (month == 5) || (month == 7) || (month == 8) || (month == 10) || (month == 12)) -> 31
         (year % 4 != 0) && ((month == 4) || (month == 6) || (month == 9)) -> 30
         ((year % 4 != 0) && (year % 400 != 0) || (year % 4 == 0) && (year % 400 != 0)) && (month == 2) -> 28
@@ -67,14 +68,12 @@ fun daysInMonth(month: Int, year: Int): Int {
 fun circleInside(
     x1: Double, y1: Double, r1: Double,
     x2: Double, y2: Double, r2: Double
-): Boolean {
-    return when {
-        (x1 == x2) && (y1 == y2) && (r2 >= r1) -> true
-        ((x1 != x2) && (y1 == y2)) && (r2 >= r1 + (abs(y2 - y1))) -> true
-        ((x1 == x2) && (y1 != y2)) && (r2 >= r1 + (abs(x2 - x1))) -> true
-        else -> false
-    }
-}
+): Boolean =
+    sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1))) <= r2 - r1
+
+
+
+
 
 /**
  * Средняя
@@ -92,7 +91,7 @@ fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
         (b <= r) && ((a <= s) || (c <= s)) -> true
         (b <= s) && ((a <= r) || (c <= r)) -> true
         (c <= s) && ((b <= r) || (a <= r)) -> true
-        (c <= s) && ((b <= r) || (a <= r)) -> true
+        (c <= r) && ((b <= r) || (a <= r)) -> true
         else -> false
     }
 }

@@ -88,10 +88,10 @@ fun timeForHalfWay(
     t2: Double, v2: Double,
     t3: Double, v3: Double
 ): Double {
-    val s = ((v1 * t1) + (v2 * t2) + (v3 * t3)) / 2
+    val s: Double = ((v1 * t1) + (v2 * t2) + (v3 * t3)) / 2
     return when {
-        t1 * v1 > s -> (s / v1)
-        (t1 * v1 < s) && (t1 * v1 + t2 * v2 > s) -> (t1 + (s - t1 * v1) / v2)
+        t1 * v1 >= s -> (s / v1)
+        (t1 * v1 < s) && (t1 * v1 + t2 * v2 >= s) -> (t1 + (s - t1 * v1) / v2)
         (t1 * v1) + (t2 * v2) < s -> (t1 + t2 + (s - (v1 * t1) - (v2 * t2)) / v3)
         else -> 0.0
     }
@@ -116,7 +116,7 @@ fun whichRookThreatens(
     return when {
         ((kingX == rookX1 || kingY == rookY1) && (kingX != rookX2 && kingY != rookY2)) -> 1
         ((kingX == rookX2 || kingY == rookY2) && (kingX != rookX1 && kingY != rookY1)) -> 2
-        ((kingX == rookX1 && kingX == rookX2) || (kingY == rookY1 && kingY == rookY2) || (kingX == rookY1 && kingY == rookX2) || (kingX == rookY2 && kingX == rookY1)) -> 3
+        ((kingX == rookX1 && kingX == rookX2) || (kingY == rookY1 && kingY == rookY2)) -> 3
         (kingX == rookX2 && kingY == rookY1) || ((kingX == rookX1) && (kingY == rookY2)) -> 3
         else -> 0
     }
@@ -167,6 +167,7 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
         (a > c) && (a >= b) && (sqr(a) > sqr(c) + sqr(b)) && (a < c + b) && (a > c - b) -> 2
         (b > a) && (b >= c) && (sqr(b) > sqr(a) + sqr(c)) && (b < a + c) && (b > a - c) -> 2
         (a == b) && (b == c) -> 0
+        ((a == b) && (b != c)) || ((a == c) && (c != b)) || ((c == b) && (b != a)) -> 0
         else -> -1
     }
 }
@@ -189,7 +190,8 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
         (b < d) && (c < b) && (a < c) -> b - c
         (d < b) && (a < d) && (c < a) -> d - a
         ((b == c) && (a < b) && (c < d)) || ((d == a) && (a < b) && (c < d)) -> 0
-        (a == b) && (b == c) && (c == d) -> 0
+        ((a == b) && (b == c) && (c == d)) || (a == b && b == c && c != d) || (b == d && b == c && c != a) -> 0
+        (b == d && b == a && a != c) || (a == d && a == c && c != b) -> 0
         else -> -1
     }
 }
