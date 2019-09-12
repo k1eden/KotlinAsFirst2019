@@ -113,13 +113,10 @@ fun whichRookThreatens(
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
 ): Int {
-    return when {
-        ((kingX == rookX1 || kingY == rookY1) && (kingX != rookX2 && kingY != rookY2)) -> 1
-        ((kingX == rookX2 || kingY == rookY2) && (kingX != rookX1 && kingY != rookY1)) -> 2
-        ((kingX == rookX1 && kingX == rookX2) || (kingY == rookY1 && kingY == rookY2)) -> 3
-        (kingX == rookX2 && kingY == rookY1) || ((kingX == rookX1) && (kingY == rookY2)) -> 3
-        else -> 0
-    }
+    var tr = 0
+    if ((kingY == rookY1) || (kingX == rookX1)) tr += 1
+    if ((kingX == rookX2) || (kingY == rookY2)) tr += 2
+    return tr
 }
 
 
@@ -139,12 +136,10 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int {
-    return when {
-        ((kingX == rookX) || (kingY == rookY)) && (abs(bishopX - kingX) != abs(bishopY - kingY)) -> 1
-        (abs(bishopX - kingX) == abs(bishopY - kingY)) && (kingX != rookX) && (kingY != rookY) -> 2
-        ((kingX == rookX) || (kingY == rookY)) && (abs(bishopX - kingX) == (abs(bishopY - kingY))) -> 3
-        else -> 0
-    }
+    var tr = 0
+    if ((kingX == rookX) || (kingY == rookY)) tr += 1
+    if (abs(bishopX - kingX) == abs(bishopY - kingY)) tr += 2
+    return tr
 }
 
 /**
@@ -156,19 +151,19 @@ fun rookOrBishopThreatens(
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
+    val max: Double = max(max(a, b), max(b, c))
     return when {
-        (c > a) && (c >= b) && (sqr(c) == sqr(a) + sqr(b)) && (c < a + b) && (c > a - b) -> 1
-        (a > c) && (a >= b) && (sqr(a) == sqr(c) + sqr(b)) && (a < c + b) && (a > c - b) -> 1
-        (b > a) && (b >= c) && (sqr(b) == sqr(a) + sqr(c)) && (b < a + c) && (b > a - c) -> 1
-        (c > a) && (c >= b) && (sqr(c) < sqr(a) + sqr(b)) && (c < a + b) && (c > a - b) -> 0
-        (a > c) && (a >= b) && (sqr(a) < sqr(c) + sqr(b)) && (a < c + b) && (a > c - b) -> 0
-        (b > a) && (b >= c) && (sqr(b) < sqr(a) + sqr(c)) && (b < a + c) && (b > c - a) -> 0
-        (c > a) && (c >= b) && (sqr(c) > sqr(a) + sqr(b)) && (c < a + b) && (c > a - b) -> 2
-        (a > c) && (a >= b) && (sqr(a) > sqr(c) + sqr(b)) && (a < c + b) && (a > c - b) -> 2
-        (b > a) && (b >= c) && (sqr(b) > sqr(a) + sqr(c)) && (b < a + c) && (b > a - c) -> 2
-        (a == b) && (b == c) -> 0
-        ((a == b) && (b != c)) || ((a == c) && (c != b)) || ((c == b) && (b != a)) -> 0
+        (a == max) && (sqr(a) == sqr(b) + sqr(c)) -> 1
+        (b == max) && (sqr(b) == sqr(a) + sqr(c)) -> 1
+        (c == max) && (sqr(c) == sqr(b) + sqr(a)) -> 1
+        (a == max) && (sqr(a) < sqr(b) + sqr(c)) && (a < b + c) && (a > abs(b - c)) -> 0
+        (b == max) && (sqr(b) < sqr(a) + sqr(c)) && (b < a + c) && (b > abs(a - c)) -> 0
+        (c == max) && (sqr(c) < sqr(b) + sqr(a)) && (c < b + a) && (c > abs(b - a)) -> 0
+        (a == max) && (sqr(a) > sqr(b) + sqr(c)) && (a < b + c) && (a > abs(b - c)) -> 2
+        (b == max) && (sqr(b) > sqr(a) + sqr(c)) && (b < a + c) && (b > abs(a - c)) -> 2
+        (c == max) && (sqr(c) > sqr(b) + sqr(a)) && (c < b + a) && (c > abs(b - a)) -> 2
         else -> -1
+
     }
 }
 
@@ -183,15 +178,12 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
     return when {
-        (c < b) && (a < c) && (b < d) -> b - c
-        (d < b) && (c < d) && (a < c) -> d - c
-        (a < d) && (c < a) && (d < b) -> d - a
-        (b < d) && (a < b) && (c < a) -> b - a
-        (b < d) && (c < b) && (a < c) -> b - c
-        (d < b) && (a < d) && (c < a) -> d - a
-        ((b == c) && (a < b) && (c < d)) || ((d == a) && (a < b) && (c < d)) -> 0
-        ((a == b) && (b == c) && (c == d)) || (a == b && b == c && c != d) || (b == d && b == c && c != a) -> 0
-        (b == d && b == a && a != c) || (a == d && a == c && c != b) -> 0
+        (c <= b) && (a <= c) && (b <= d) -> b - c
+        (d <= b) && (c <= d) && (a <= c) -> d - c
+        (a <= d) && (c <= a) && (d <= b) -> d - a
+        (b <= d) && (a <= b) && (c <= a) -> b - a
+        (b <= d) && (c <= b) && (a <= c) -> b - c
+        (d <= b) && (a <= d) && (c <= a) -> d - a
         else -> -1
     }
 }
