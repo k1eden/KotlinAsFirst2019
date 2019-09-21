@@ -148,11 +148,18 @@ fun maxDivisor(n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    for (i in 2..max(m, n)) {
-        if ((n % i == 0) && (m % i == 0)) return false
+    var mm = m
+    var nn = n
+    while (true) {
+        when {
+            mm > nn -> mm -= nn
+            nn > mm -> nn -= mm
+            else -> return (mm == 1)
+        }
     }
-    return true
 }
+
+
 
 /**
  * Простая
@@ -339,7 +346,34 @@ fun hasDifferentDigits(n: Int): Boolean {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    fun digitNumber(n: Int): Int {
+        var count = 0
+        var number = n
+        if (n == 0) return 1
+        while (number > 0) {
+            count++
+            number /= 10
+        }
+        return count
+    }
+
+    var pos = 0
+    var s = 1
+    var cn = 0
+    while (pos < n) {
+        cn = s * s
+        pos += digitNumber(s * s)
+        s++
+    }
+    return if (pos == n) cn % 10
+    else {
+        for (i in 1..(pos - n)) {
+            cn /= 10
+        }
+        cn % 10
+    }
+}
 
 /**
  * Сложная
@@ -350,4 +384,46 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    fun fib(n: Int): Int {
+        var fn = 1
+        var sn = 1
+        var tn = fn + sn
+        if (n < 3) return 1
+        else {
+            for (i in 1..n - 3) {
+                fn = sn
+                sn = tn
+                tn = fn + sn
+            }
+        }
+        return tn
+    }
+
+    fun digitNumber(n: Int): Int {
+        var count = 0
+        var number = n
+        if (n == 0) return 1
+        while (number > 0) {
+            count++
+            number /= 10
+        }
+        return count
+    }
+
+    var pos = 0
+    var s = 1
+    var cn = 0
+    while (pos < n) {
+        cn = fib(s)
+        pos += digitNumber(fib(s))
+        s++
+    }
+    return if (pos == n) cn % 10
+    else {
+        for (i in 1..(pos - n)) {
+            cn /= 10
+        }
+        cn % 10
+    }
+}

@@ -3,9 +3,7 @@
 package lesson2.task2
 
 import lesson1.task1.sqr
-import kotlin.math.abs
-import kotlin.math.pow
-import kotlin.math.sqrt
+import kotlin.math.*
 
 /**
  * Пример
@@ -81,13 +79,12 @@ fun circleInside(
  * Вернуть true, если кирпич пройдёт
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
-    return when {
-        (a <= r) && ((b <= s) || (c <= s)) -> true
-        (a <= s) && ((b <= r) || (c <= r)) -> true
-        (b <= r) && ((a <= s) || (c <= s)) -> true
-        (b <= s) && ((a <= r) || (c <= r)) -> true
-        (c <= s) && ((b <= r) || (a <= r)) -> true
-        (c <= r) && ((b <= s) || (a <= s)) -> true
-        else -> false
+    val min: Int = min(min(a, b), min(b, c))
+    var minOf2 = 0
+    when (min) {
+        a -> minOf2 = min(b, c)
+        b -> minOf2 = min(a, c)
+        c -> minOf2 = min(a, b)
     }
+    return (max(min, minOf2)) <= (max(r, s)) && (min(min, minOf2) <= min(r, s))
 }
