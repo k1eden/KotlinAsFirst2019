@@ -6,6 +6,7 @@ import lesson1.task1.discriminant
 import lesson1.task1.sqr
 import kotlin.math.abs
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
@@ -89,9 +90,9 @@ fun timeForHalfWay(
     t2: Double, v2: Double,
     t3: Double, v3: Double
 ): Double {
-    val s: Double = ((v1 * t1) + (v2 * t2) + (v3 * t3)) / 2
-    val h1: Double = v1 * t1
-    val h2: Double = v2 * t2
+    val s = ((v1 * t1) + (v2 * t2) + (v3 * t3)) / 2
+    val h1 = v1 * t1
+    val h2 = v2 * t2
     return when {
         h1 >= s -> (s / v1)
         (h1 < s) && (h1 + h2 >= s) -> (t1 + (s - h1) / v2)
@@ -154,7 +155,7 @@ fun rookOrBishopThreatens(
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
-    val max: Double = max(max(a, b), max(b, c))
+    val max = maxOf(a, b, c)
     return when {
         (a == max) && (sqr(a) == sqr(b) + sqr(c)) -> 1
         (b == max) && (sqr(b) == sqr(a) + sqr(c)) -> 1
@@ -180,13 +181,13 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
+    val max = max(max(a, b), (max(c, d)))
+    val min = min((min(a, b)), (min(c, d)))
     return when {
-        (c <= b) && (a <= c) && (b <= d) -> b - c
-        (d <= b) && (c <= d) && (a <= c) -> d - c
-        (a <= d) && (c <= a) && (d <= b) -> d - a
-        (b <= d) && (a <= b) && (c <= a) -> b - a
-        (b <= d) && (c <= b) && (a <= c) -> b - c
-        (d <= b) && (a <= d) && (c <= a) -> d - a
+        (a == min) && (d == max) && (b >= c) -> b - c
+        (a == min) && (b == max) && (d >= c) -> d - c
+        (c == min) && (b == max) && (d >= a) -> d - a
+        (c == min) && (d == max) && (b >= a) -> b - a
         else -> -1
     }
 }
