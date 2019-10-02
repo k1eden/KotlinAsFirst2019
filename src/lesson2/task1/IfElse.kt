@@ -157,15 +157,9 @@ fun rookOrBishopThreatens(
 fun triangleKind(a: Double, b: Double, c: Double): Int {
     val max = maxOf(a, b, c)
     return when {
-        (a == max) && (sqr(a) == sqr(b) + sqr(c)) -> 1
-        (b == max) && (sqr(b) == sqr(a) + sqr(c)) -> 1
-        (c == max) && (sqr(c) == sqr(b) + sqr(a)) -> 1
-        (a == max) && (sqr(a) < sqr(b) + sqr(c)) && (a < b + c) && (a > abs(b - c)) -> 0
-        (b == max) && (sqr(b) < sqr(a) + sqr(c)) && (b < a + c) && (b > abs(a - c)) -> 0
-        (c == max) && (sqr(c) < sqr(b) + sqr(a)) && (c < b + a) && (c > abs(b - a)) -> 0
-        (a == max) && (sqr(a) > sqr(b) + sqr(c)) && (a < b + c) && (a > abs(b - c)) -> 2
-        (b == max) && (sqr(b) > sqr(a) + sqr(c)) && (b < a + c) && (b > abs(a - c)) -> 2
-        (c == max) && (sqr(c) > sqr(b) + sqr(a)) && (c < b + a) && (c > abs(b - a)) -> 2
+        (2 * max - a - b - c < 0) && (2 * sqr(max) == sqr(a) + sqr(b) + sqr(c)) -> 1
+        (2 * max - a - b - c < 0) && (2 * sqr(max) > sqr(a) + sqr(b) + sqr(c)) -> 2
+        (2 * max - a - b - c < 0) && (2 * sqr(max) < sqr(a) + sqr(b) + sqr(c)) -> 0
         else -> -1
 
     }
@@ -180,15 +174,6 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    val max = max(max(a, b), (max(c, d)))
-    val min = min((min(a, b)), (min(c, d)))
-    return when {
-        (a == min) && (d == max) && (b >= c) -> b - c
-        (a == min) && (b == max) && (d >= c) -> d - c
-        (c == min) && (b == max) && (d >= a) -> d - a
-        (c == min) && (d == max) && (b >= a) -> b - a
-        else -> -1
-    }
-}
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int =
+    max(-1, min(max(a, b), max(c, d)) - max(min(a, b), min(c, d)))
 

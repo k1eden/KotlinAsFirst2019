@@ -91,12 +91,10 @@ fun fib(n: Int): Int {
     var sn = 1
     var tn = fn + sn
     if (n < 3) return 1
-    else {
-        for (i in 1..n - 3) {
-            fn = sn
-            sn = tn
-            tn = fn + sn
-        }
+    for (i in 1..n - 3) {
+        fn = sn
+        sn = tn
+        tn = fn + sn
     }
     return tn
 }
@@ -134,11 +132,8 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-    var k = n - 1
-    while (n % k != 0) k--
-    return k
-}
+fun maxDivisor(n: Int): Int =
+    n / minDivisor(n)
 
 /**
  * Простая
@@ -218,7 +213,7 @@ fun sin(x: Double, eps: Double): Double {
     var si = 0.0
     var t: Double
     var cn = 1
-    if (x > 0) {
+    if (x % (2 * PI) > 0) {
         while (xx > 2 * PI) {
             xx -= 2 * PI
         }
@@ -249,7 +244,7 @@ fun cos(x: Double, eps: Double): Double {
     var co = 0.0
     var t: Double
     var cn = 0
-    if (x > 0) {
+    if (x % (2 * PI) > 0) {
         while (xx > 2 * PI) {
             xx -= 2 * PI
         }
@@ -274,14 +269,9 @@ fun cos(x: Double, eps: Double): Double {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun revert(n: Int): Int {
-    var count: Int = -1
+    var count: Int = digitNumber(n) - 1
     var xx = n
     var newDigit = 0
-    while (xx > 0) {
-        xx /= 10
-        count++
-    }
-    xx = n
     while (xx > 0) {
         newDigit += ((xx % 10) * (10.0).pow(count)).toInt()
         xx /= 10
@@ -299,22 +289,8 @@ fun revert(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean {
-    var count: Int = -1
-    var xx = n
-    var newDigit = 0
-    while (xx > 0) {
-        xx /= 10
-        count++
-    }
-    xx = n
-    while (xx > 0) {
-        newDigit += ((xx % 10) * (10.0).pow(count)).toInt()
-        xx /= 10
-        count--
-    }
-    return n == newDigit
-}
+fun isPalindrome(n: Int): Boolean =
+    (revert(n) == n)
 
 /**
  * Средняя
@@ -326,13 +302,11 @@ fun isPalindrome(n: Int): Boolean {
  */
 fun hasDifferentDigits(n: Int): Boolean {
     var n1: Int
-    var n2: Int
     var xx = n
     while (xx > 9) {
         n1 = xx % 10
         xx /= 10
-        n2 = xx % 10
-        if (n1 != n2) return true
+        if (n1 != xx % 10) return true
     }
     return false
 }
