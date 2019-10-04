@@ -156,10 +156,12 @@ fun rookOrBishopThreatens(
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
     val max = maxOf(a, b, c)
+    val k1 = 2 * max - a - b - c < 0
+    val k2 = 2 * sqr(max) - sqr(a) - sqr(b) - sqr(c)
     return when {
-        (2 * max - a - b - c < 0) && (2 * sqr(max) == sqr(a) + sqr(b) + sqr(c)) -> 1
-        (2 * max - a - b - c < 0) && (2 * sqr(max) > sqr(a) + sqr(b) + sqr(c)) -> 2
-        (2 * max - a - b - c < 0) && (2 * sqr(max) < sqr(a) + sqr(b) + sqr(c)) -> 0
+        (k1) && (k2 == 0.0) -> 1
+        (k1) && (k2 > 0) -> 2
+        (k1) && (k2 < 0) -> 0
         else -> -1
 
     }

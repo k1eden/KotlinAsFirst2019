@@ -213,7 +213,8 @@ fun sin(x: Double, eps: Double): Double {
     var si = 0.0
     var t: Double
     var cn = 1
-    if (x % (2 * PI) > 0) {
+    val xNorm = x % (2 * PI)
+    if (xNorm > 0) {
         while (xx > 2 * PI) {
             xx -= 2 * PI
         }
@@ -244,7 +245,8 @@ fun cos(x: Double, eps: Double): Double {
     var co = 0.0
     var t: Double
     var cn = 0
-    if (x % (2 * PI) > 0) {
+    val xNorm = x % (2 * PI)
+    if (xNorm > 0) {
         while (xx > 2 * PI) {
             xx -= 2 * PI
         }
