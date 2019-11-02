@@ -321,7 +321,34 @@ fun decimalFromString(str: String, base: Int): Int {
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+fun roman(n: Int): String {
+    val thous = listOf("M", "MM", "MMM")
+    val hund = listOf("C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM")
+    val doz = listOf("X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC")
+    val un = listOf("I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX")
+    var nn = n
+    val res = StringBuilder()
+    if (nn >= 1000) {
+        val firstDigit = n / 1000 % 10
+        res.append(thous[firstDigit - 1])
+        nn -= 1000 * firstDigit
+    }
+    if (nn >= 100) {
+        val secondDigit = n / 100 % 10
+        res.append(hund[secondDigit - 1])
+        nn -= 100 * secondDigit
+    }
+    if (nn >= 10) {
+        val thirdDigit = n / 10 % 10
+        res.append(doz[thirdDigit - 1])
+        nn -= 10 * thirdDigit
+    }
+    if (nn > 0) {
+        val fourthDigit = n % 10
+        res.append(un[fourthDigit - 1])
+    }
+    return res.toString()
+}
 
 /**
  * Очень сложная
@@ -330,4 +357,100 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    val first9 = listOf(
+        "",
+        "один",
+        "два",
+        "три",
+        "четыре",
+        "пять",
+        "шесть",
+        "семь",
+        "восемь",
+        "девять"
+    )
+    val first9Thousands = listOf(
+        "тысяч",
+        "одна тысяча",
+        "две тысячи",
+        "три тысячи",
+        "четыре тысячи",
+        "пять тысяч",
+        "шесть тысяч",
+        "семь тысяч",
+        "восемь тысяч",
+        "девять тысяч"
+    )
+    val from10To19 = listOf(
+        "десять",
+        "одиннадцать",
+        "двенадцать",
+        "тринадцать",
+        "четырнадцать",
+        "пятнадцать",
+        "шестнадцать",
+        "семнадцать",
+        "восемнадцать",
+        "девятнадцать"
+    )
+    val from20To90 = listOf(
+        "",
+        "",
+        "двадцать",
+        "тридцать",
+        "сорок",
+        "пятьдесят",
+        "шестьдесят",
+        "семьдесят",
+        "восемьдесят",
+        "девяносто"
+    )
+    val from100To900 = listOf(
+        "",
+        "сто",
+        "двести",
+        "триста",
+        "четыреста",
+        "пятьсот",
+        "шестьсот",
+        "семьсот",
+        "восемьсот",
+        "девятьсот"
+    )
+
+    val dig = arrayOf(0, 0, 0, 0, 0, 0)
+    var num = n
+    var i = 0
+    while (num > 0) {
+        dig[i] = (num % 10)
+        num /= 10
+        i++
+    }
+
+    val res = mutableListOf<String>()
+
+    if (n >= 1000) {
+        if (dig[4] == 1) {
+            res.add(from100To900[dig[5]])
+            res.add(from10To19[dig[3]])
+            res.add(first9Thousands[0])
+        } else {
+            res.add(from100To900[dig[5]])
+            res.add(from20To90[dig[4]])
+            res.add(first9Thousands[dig[3]])
+        }
+    }
+
+    if (dig[1] == 1) {
+        res.add(from100To900[dig[2]])
+        res.add(from10To19[dig[0]])
+    } else {
+        res.add(from100To900[dig[2]])
+        res.add(from20To90[dig[1]])
+        res.add(first9[dig[0]])
+    }
+
+    while ("" in res) res.remove("")
+    return res.joinToString(" ")
+}
