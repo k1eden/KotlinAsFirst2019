@@ -159,11 +159,10 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     val k1 = 2 * max - a - b - c < 0
     val k2 = 2 * sqr(max) - sqr(a) - sqr(b) - sqr(c)
     return when {
-        (k1) && (k2 == 0.0) -> 1
-        (k1) && (k2 > 0) -> 2
-        (k1) && (k2 < 0) -> 0
-        else -> -1
-
+        !k1 -> -1
+        k2 == 0.0 -> 1
+        k2 > 0 -> 2
+        else -> 0
     }
 }
 

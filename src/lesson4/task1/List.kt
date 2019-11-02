@@ -247,7 +247,8 @@ fun convert(n: Int, base: Int): List<Int> {
         list.add(nn % base)
         nn /= base
     }
-    return list.asReversed()
+    return if (n == 0) listOf(0)
+    else list.asReversed()
 }
 
 /**
@@ -269,7 +270,8 @@ fun convertToString(n: Int, base: Int): String {
         list.add(Alp[nn % base])
         nn /= base
     }
-    return list.joinToString(separator = "") { "$it" }.reversed()
+    return if (n == 0) "0"
+    else list.joinToString(separator = "") { "$it" }.reversed()
 }
 
 /**
