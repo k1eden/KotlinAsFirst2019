@@ -208,15 +208,12 @@ fun collatzSteps(x: Int): Int {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x: Double, eps: Double): Double {
-    var xx: Double = x
     var si = 0.0
     var t: Double
     var cn = 1
-    while (xx > 2 * PI) {
-        xx -= 2 * PI
-    }
+    val xNorm = x % (2 * PI)
     do {
-        t = (xx.pow(2 * cn - 1) / factorial(2 * cn - 1)) * (-1.0).pow(cn + 1)
+        t = (xNorm.pow(2 * cn - 1) / factorial(2 * cn - 1)) * (-1.0).pow(cn + 1)
         si += t
         cn++
     } while (abs(t) >= eps)
@@ -233,15 +230,12 @@ fun sin(x: Double, eps: Double): Double {
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
 fun cos(x: Double, eps: Double): Double {
-    var xx: Double = x
     var co = 0.0
     var t: Double
     var cn = 0
-    while (xx > 2 * PI) {
-        xx -= 2 * PI
-    }
+    val xNorm = x % (2 * PI)
     do {
-        t = (xx.pow(2 * cn) / factorial(2 * cn)) * (-1.0).pow(cn)
+        t = (xNorm.pow(2 * cn) / factorial(2 * cn)) * (-1.0).pow(cn)
         co += t
         cn++
     } while (abs(t) >= eps)
