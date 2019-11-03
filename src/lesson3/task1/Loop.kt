@@ -116,6 +116,7 @@ fun lcm(m: Int, n: Int): Int {
         }
     }
 }
+
 /**
  * Простая
  *
@@ -153,8 +154,6 @@ fun isCoPrime(m: Int, n: Int): Boolean {
         }
     }
 }
-
-
 
 /**
  * Простая
@@ -213,15 +212,8 @@ fun sin(x: Double, eps: Double): Double {
     var si = 0.0
     var t: Double
     var cn = 1
-    val xNorm = x % (2 * PI)
-    if (xNorm > 0) {
-        while (xx > 2 * PI) {
-            xx -= 2 * PI
-        }
-    } else {
-        while (xx < 0) {
-            xx += 2 * PI
-        }
+    while (xx > 2 * PI) {
+        xx -= 2 * PI
     }
     do {
         t = (xx.pow(2 * cn - 1) / factorial(2 * cn - 1)) * (-1.0).pow(cn + 1)
@@ -245,15 +237,8 @@ fun cos(x: Double, eps: Double): Double {
     var co = 0.0
     var t: Double
     var cn = 0
-    val xNorm = x % (2 * PI)
-    if (xNorm > 0) {
-        while (xx > 2 * PI) {
-            xx -= 2 * PI
-        }
-    } else {
-        while (xx < 0) {
-            xx += 2 * PI
-        }
+    while (xx > 2 * PI) {
+        xx -= 2 * PI
     }
     do {
         t = (xx.pow(2 * cn) / factorial(2 * cn)) * (-1.0).pow(cn)
