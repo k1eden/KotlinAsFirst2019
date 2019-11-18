@@ -157,12 +157,13 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.
  */
 fun times(a: List<Int>, b: List<Int>): Int {
-    var summ = 0
-    if (a.isEmpty() || b.isEmpty()) return 0
-    for (i in 0 until max(a.size, b.size)) {
-        summ += a[i] * b[i]
+    var sum = 0
+    var s: List<Int>
+    for (i in b.indices) {
+        s = a.map { it -> it * b[i] }
+        sum += s[i]
     }
-    return summ
+    return sum
 }
 
 /**
@@ -174,15 +175,15 @@ fun times(a: List<Int>, b: List<Int>): Int {
  * Значение пустого многочлена равно 0 при любом x.
  */
 fun polynom(p: List<Int>, x: Int): Int {
-    var summ = 0.0
-    return if (p.isEmpty()) 0
-    else {
-        for (i in p.indices) {
-            summ += p[i].toDouble() * x.toDouble().pow(i)
-        }
-        summ.toInt()
+    var sum = 0
+    var s: List<Int>
+    for (i in p.indices) {
+        s = p.map { it -> it * (x.toDouble().pow(i)).toInt() }
+        sum += s[i]
     }
+    return sum
 }
+
 
 /**
  * Средняя
@@ -195,11 +196,8 @@ fun polynom(p: List<Int>, x: Int): Int {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Int>): MutableList<Int> {
-    if (list.isEmpty()) return list
-    else {
-        for (i in 1 until list.size) {
-            list[i] += list[i - 1]
-        }
+    for (i in 1 until list.size) {
+        list[i] += list[i - 1]
     }
     return list
 }
@@ -262,17 +260,9 @@ fun convert(n: Int, base: Int): List<Int> {
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, n.toString(base) и подобные), запрещается.
  */
-fun convertToString(n: Int, base: Int): String {
-    val Alp = "0123456789abcdefghijklmnopqrstuvwxyz"
-    var nn = n
-    val list = mutableListOf<Char>()
-    while (nn > 0) {
-        list.add(Alp[nn % base])
-        nn /= base
-    }
-    return if (n == 0) "0"
-    else list.joinToString(separator = "") { "$it" }.reversed()
-}
+fun convertToString(n: Int, base: Int): String =
+    convert(n, base).map { if (it <= 9) '0' + it else 'a' + (it - 10) }.joinToString(separator = "")
+
 
 /**
  * Средняя
@@ -284,10 +274,8 @@ fun convertToString(n: Int, base: Int): String {
 fun decimal(digits: List<Int>, base: Int): Int {
     var res = 0.0
     val bb = base.toDouble()
-    var CurrPos = 0
-    for (i in digits.size - 1 downTo 0) {
-        res += digits[CurrPos] * bb.pow(i)
-        CurrPos++
+    for ((currPos, i) in (digits.size - 1 downTo 0).withIndex()) {
+        res += digits[currPos] * bb.pow(i)
     }
     return res.toInt()
 }
@@ -305,14 +293,14 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    val Alp = "0123456789abcdefghijklmnopqrstuvwxyz"
-    var count = 0.0
-    var k = 0
-    for (i in str.length - 1 downTo 0) {
-        count += Alp.indexOf(str[i]) * base.toDouble().pow(k)
-        k++
+    var res = 0
+    for (i in str.indices) {
+        res *= base
+        if (str[i] in 'a'..'z') {
+            res += str[i] - 'a' + 10
+        } else res += str[i] - '0'
     }
-    return count.toInt()
+    return res
 }
 
 /**

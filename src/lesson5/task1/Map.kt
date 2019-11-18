@@ -112,11 +112,12 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
-    for ((key, value) in a) {
-        if (b[key] != value) return false
+    for ((key) in a) {
+        if (b.all { it.value != a[key] }) return false
     }
     return true
 }
+
 
 /**
  * Простая
@@ -165,20 +166,10 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.toSet().int
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
-    val res = mutableMapOf<String, MutableList<String>>()
-    for (i in listOf(mapA, mapB)) {
-        for ((name, value) in i) {
-            val l = res.getOrDefault(name, mutableListOf())
-            if (l.contains(value)) continue
-            if (l.isNotEmpty()) res[name]!!.add(value)
-            else res[name] = mutableListOf(value)
-        }
-    }
-    val res1 = mutableMapOf<String, String>()
-    for ((name, value) in res) {
-        res1[name] = value.joinToString()
-    }
-    return res1
+    val mapAmody = mapA.toMutableMap()
+    for ((i) in mapAmody)
+        if ((mapB.containsKey(i)) && (mapAmody[i] != mapB[i])) mapAmody[i] += ", " + mapB[i]
+    return mapB + mapAmody.toMap()
 }
 
 /**
