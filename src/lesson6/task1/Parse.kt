@@ -217,6 +217,7 @@ fun plusMinus(expression: String): Int {
     val pl = mutableListOf("+")
     val parts = expression.split(" ")
     var ans = 0
+    if (expression == "") throw e
     for (i in parts.indices step 2) {
         if (parts[i].contains(Regex("""[-+]"""))) throw e
     }
