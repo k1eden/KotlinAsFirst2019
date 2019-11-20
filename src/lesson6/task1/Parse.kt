@@ -209,7 +209,28 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val e = IllegalArgumentException()
+    val a = Regex("""(\d)+""").findAll(expression)
+    val b = Regex("""[+-]""").findAll(expression)
+    val num = mutableListOf<Int>()
+    val pl = mutableListOf("+")
+    val parts = expression.split(" ")
+    var ans = 0
+    for (i in parts.indices step 2) {
+        if (parts[i].contains(Regex("""[-+]"""))) throw e
+    }
+    for (i in 1 until parts.size step 2) {
+        if (parts[i].contains(Regex("""/d+"""))) throw e
+    }
+    for (numbers in a) num.add(numbers.value.toInt())
+    for (plusMin in b) pl.add(plusMin.value)
+    for (i in num.indices) {
+        if (pl[i] == "+") ans += num[i]
+        else ans -= num[i]
+    }
+    return ans
+}
 
 /**
  * Сложная
@@ -233,7 +254,21 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше либо равны нуля.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    val parts = description.split("; ")
+    var res = -1.0
+    var mostExpensive = ""
+    for (part in parts) {
+        val j = part.split(" ")
+        if (j.size != 2) return ""
+        val value = j[1].toDoubleOrNull() ?: return ""
+        if (value > res) {
+            res = value
+            mostExpensive = j[0]
+        }
+    }
+    return mostExpensive
+}
 
 /**
  * Сложная
