@@ -156,9 +156,7 @@ fun dateDigitToStr(digital: String): String {
 fun flattenPhoneNumber(phone: String): String {
     val a = Regex("""\d""").findAll(phone)
     var res = ""
-    if (phone.contains(Regex("""[a-z]|[A-Z]|[&^!@#$*=_.<>,а-яА-Я~]|[]]|\+$"""))) return ""
-    if ("()" in phone) return ""
-    if ("[" in phone) return ""
+    if (!phone.matches(Regex("""^(\+)?(\d)+ *(\((\d)+ *-* *(\d)*\))?((\d)*-* *)*$"""))) return ""
     if ("+" in phone) {
         res += "+"
     }
@@ -215,16 +213,8 @@ fun plusMinus(expression: String): Int {
     val b = Regex("""[+-]""").findAll(expression)
     val num = mutableListOf<Int>()
     val pl = mutableListOf("+")
-    val parts = expression.split(" ")
     var ans = 0
-    if (expression == "") throw e
-    if (expression.contains(Regex("""[a-z]|[A-Z]|[&^!@#$*=_.<>,а-яА-Я~]|[]]"""))) throw e
-    for (i in parts.indices step 2) {
-        if (parts[i].contains(Regex("""[-+]"""))) throw e
-    }
-    for (i in 1 until parts.size step 2) {
-        if (parts[i].contains(Regex("""/d+"""))) throw e
-    }
+    if (!expression.matches(Regex("""(\d+ [+-] )*\d+"""))) throw e
     for (numbers in a) num.add(numbers.value.toInt())
     for (plusMin in b) pl.add(plusMin.value)
     for (i in num.indices) {
@@ -243,7 +233,16 @@ fun plusMinus(expression: String): Int {
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val ind = mutableListOf<String>()
+    for (i in Regex("""\S+""").findAll(str)) ind.add(i.value.toLowerCase())
+    var counter = 0
+    for (j in 1 until ind.size) {
+        if (ind[j - 1] == ind[j]) return counter
+        else counter += ind[j - 1].length + 1
+    }
+    return -1
+}
 
 /**
  * Сложная
