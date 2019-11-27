@@ -124,6 +124,7 @@ class Tests {
         assertTrue(containsIn(mapOf("a" to "z"), mapOf("a" to "z", "b" to "sweet")))
         assertFalse(containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")))
         assertFalse(containsIn(mapOf("GgbQPZbly:,J Fy@RK-P{EfD:DP" to ""), mapOf("Kco" to "")))
+        assertFalse(containsIn(mapOf("" to ""), mapOf("YT>0iN(a-b1{yUmf" to "", "" to "f4", "23" to "fdfd")))
     }
 
     @Test
