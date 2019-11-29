@@ -172,7 +172,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
             while (res.length != max) {
                 res.insert(l, " ")
                 counter++
-                l += w[counter % (w.size - 1)].length + (counter / (w.size - 1)) + 1
+                l += w[counter % (w.size - 1)].length + (counter / (w.size - 1)) + 2
                 if (counter % (w.size - 1) == 0) l = w[counter % (w.size - 1)].length
             }
             it.write(res.toString())
