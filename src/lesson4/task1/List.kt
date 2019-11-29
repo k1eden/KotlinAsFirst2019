@@ -156,15 +156,8 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.
  */
-fun times(a: List<Int>, b: List<Int>): Int {
-    var sum = 0
-    var s: List<Int>
-    for (i in b.indices) {
-        s = a.map { it -> it * b[i] }
-        sum += s[i]
-    }
-    return sum
-}
+fun times(a: List<Int>, b: List<Int>): Int = a.mapIndexed { ind, el -> el * b[ind] }.sum()
+
 
 /**
  * Средняя
@@ -174,15 +167,11 @@ fun times(a: List<Int>, b: List<Int>): Int {
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0 при любом x.
  */
-fun polynom(p: List<Int>, x: Int): Int {
-    var sum = 0
-    var s: List<Int>
-    for (i in p.indices) {
-        s = p.map { it -> it * (x.toDouble().pow(i)).toInt() }
-        sum += s[i]
-    }
-    return sum
-}
+fun polynom(p: List<Int>, x: Int): Int = p.mapIndexed { ind, el -> el * (x.toDouble().pow(ind)).toInt() }.sum()
+
+
+
+
 
 
 /**
@@ -229,7 +218,7 @@ fun factorize(n: Int): List<Int> {
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n: Int): String = (factorize(n)).joinToString(separator = "*") { it -> "$it" }
+fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*")
 
 /**
  * Средняя
