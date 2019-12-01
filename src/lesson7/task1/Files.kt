@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import java.io.File
+import kotlin.math.absoluteValue
 
 /**
  * Пример
@@ -115,18 +116,20 @@ fun sibilants(inputName: String, outputName: String) {
  */
 fun centerFile(inputName: String, outputName: String) {
     val ans = File(outputName).bufferedWriter()
-    val max = File(inputName).readLines().maxBy { it.trim().length }!!.trim().length
     if (File(inputName).readText().isEmpty()) {
         ans.write("")
         ans.close()
-    }
-    ans.use {
-        for (i in File(inputName).readLines()) {
-            val newLine = StringBuffer()
-            for (j in 1..(max - i.trim().length) / 2) newLine.append(' ')
-            newLine.append(i.trim())
-            it.write(newLine.toString())
-            it.newLine()
+    } else {
+        val helper = File(inputName).readLines()
+        val max = File(inputName).readLines().maxBy { it.trim().length }!!.trim().length
+        ans.use {
+            for (i in helper.indices) {
+                val newLine = StringBuffer()
+                for (j in 1..(max - helper[i].trim().length) / 2) newLine.append(' ')
+                newLine.append(helper[i].trim())
+                it.write(newLine.toString())
+                it.newLine()
+            }
         }
     }
 }
@@ -160,31 +163,32 @@ fun centerFile(inputName: String, outputName: String) {
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
     val ans = File(outputName).bufferedWriter()
-    val max = File(inputName).readLines().maxBy { it.trim().length }!!.trim().length
     if (File(inputName).readText().isEmpty()) {
         ans.write("")
         ans.close()
-    }
-    ans.use {
-        for (i in File(inputName).readLines()) {
-            val helper = StringBuffer(i.trim())
-            val w = helper.toString().split(Regex("""\s+"""))
-            if (w.size == 1) {
-                it.write(w[0])
+    } else {
+        val max = File(inputName).readLines().maxBy { it.trim().length }!!.trim().length
+        ans.use {
+            for (i in File(inputName).readLines()) {
+                val helper = StringBuffer(i.trim())
+                val w = helper.toString().split(Regex("""\s+"""))
+                if (w.size == 1) {
+                    it.write(w[0])
+                    it.newLine()
+                    continue
+                }
+                val res = StringBuffer(w.joinToString(separator = " "))
+                var counter = 0
+                var l = w[0].length
+                while (res.length != max) {
+                    res.insert(l, " ")
+                    counter++
+                    l += w[counter % (w.size - 1)].length + (counter / (w.size - 1)) + 2
+                    if (counter % (w.size - 1) == 0) l = w[counter % (w.size - 1)].length
+                }
+                it.write(res.toString())
                 it.newLine()
-                continue
             }
-            val res = StringBuffer(w.joinToString(separator = " "))
-            var counter = 0
-            var l = w[0].length
-            while (res.length != max) {
-                res.insert(l, " ")
-                counter++
-                l += w[counter % (w.size - 1)].length + (counter / (w.size - 1)) + 2
-                if (counter % (w.size - 1) == 0) l = w[counter % (w.size - 1)].length
-            }
-            it.write(res.toString())
-            it.newLine()
         }
     }
 }
