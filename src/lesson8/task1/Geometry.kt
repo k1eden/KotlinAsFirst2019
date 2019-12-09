@@ -112,8 +112,10 @@ fun diameter(vararg points: Point): Segment {
     var maxP = Pair(-1, -1)
     for (i in points.indices) {
         for (j in 0 until i) {
-            if (points[i].distance(points[j]) > max) max = points[i].distance(points[j])
-            maxP = Pair(i, j)
+            if (points[i].distance(points[j]) > max) {
+                max = points[i].distance(points[j])
+                maxP = Pair(i, j)
+            }
         }
     }
     return Segment(points[maxP.first], points[maxP.second])
@@ -127,7 +129,7 @@ fun diameter(vararg points: Point): Segment {
  */
 fun circleByDiameter(diameter: Segment): Circle {
     val c = Point((diameter.begin.x + diameter.end.x) / 2, (diameter.begin.y + diameter.end.y) / 2)
-    val r = diameter.begin.distance(diameter.end)
+    val r = diameter.end.distance(diameter.begin) / 2
     return Circle(c, r)
 }
 
@@ -150,7 +152,9 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Найти точку пересечения с другой линией.
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
-    fun crossPoint(other: Line): Point = TODO()
+    fun crossPoint(other: Line): Point {
+        TODO()
+    }
 
     override fun equals(other: Any?) = other is Line && angle == other.angle && b == other.b
 
@@ -168,21 +172,24 @@ class Line private constructor(val b: Double, val angle: Double) {
  *
  * Построить прямую по отрезку
  */
-fun lineBySegment(s: Segment): Line = TODO()
+fun lineBySegment(s: Segment): Line = lineByPoints(s.begin, s.end)
 
 /**
  * Средняя
  *
  * Построить прямую по двум точкам
  */
-fun lineByPoints(a: Point, b: Point): Line = TODO()
+fun lineByPoints(a: Point, b: Point): Line = Line(a, (abs(atan((a.y - b.y) / (a.x - b.x)))))
 
 /**
  * Сложная
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line = TODO()
+fun bisectorByPoints(a: Point, b: Point): Line {
+    val l = lineByPoints(a, b)
+    return Line(Point((a.x + b.x) / 2, (a.y + b.y) / 2), (l.angle + PI / 2) % PI)
+}
 
 /**
  * Средняя

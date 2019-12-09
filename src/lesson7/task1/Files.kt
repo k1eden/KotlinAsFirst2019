@@ -93,7 +93,6 @@ fun sibilants(inputName: String, outputName: String) {
             it.write(newLine.toString())
             it.newLine()
         }
-        it.close()
     }
 }
 
