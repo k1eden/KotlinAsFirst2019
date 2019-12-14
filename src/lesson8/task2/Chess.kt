@@ -22,7 +22,7 @@ data class Square(val column: Int, val row: Int) {
      * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
      * Для клетки не в пределах доски вернуть пустую строку
      */
-    fun notation(): String = TODO()
+    fun notation(): String = if (inside()) "${"abcdefgh"[column - 1]}${row}" else ""
 }
 
 /**
@@ -32,7 +32,11 @@ data class Square(val column: Int, val row: Int) {
  * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
  * Если нотация некорректна, бросить IllegalArgumentException
  */
-fun square(notation: String): Square = TODO()
+fun square(notation: String) =
+    if (notation[0] !in 'a'..'h' || notation[1] !in '1'..'8' || notation.length != 2) throw IllegalArgumentException()
+    else Square(
+        notation[0] - 'a' + 1, notation[1] - '0'
+    )
 
 /**
  * Простая
@@ -57,7 +61,11 @@ fun square(notation: String): Square = TODO()
  * Пример: rookMoveNumber(Square(3, 1), Square(6, 3)) = 2
  * Ладья может пройти через клетку (3, 3) или через клетку (6, 1) к клетке (6, 3).
  */
-fun rookMoveNumber(start: Square, end: Square): Int = TODO()
+fun rookMoveNumber(start: Square, end: Square): Int {
+    if (!start.inside() || !end.inside()) throw IllegalArgumentException()
+    if (start == end) return 0
+    return if (start.column != end.column && start.row != end.row) 2 else 1
+}
 
 /**
  * Средняя

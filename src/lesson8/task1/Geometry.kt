@@ -1,6 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER")
 
 package lesson8.task1
+
 import lesson1.task1.sqr
 import kotlin.math.*
 
@@ -179,7 +180,7 @@ fun lineBySegment(s: Segment): Line = lineByPoints(s.begin, s.end)
  *
  * Построить прямую по двум точкам
  */
-fun lineByPoints(a: Point, b: Point): Line = Line(a, (abs(atan((a.y - b.y) / (a.x - b.x)))))
+fun lineByPoints(a: Point, b: Point): Line = Line(a, (PI + atan((a.y - b.y) / (a.x - b.x))) % PI)
 
 /**
  * Сложная
@@ -197,7 +198,21 @@ fun bisectorByPoints(a: Point, b: Point): Line {
  * Задан список из n окружностей на плоскости. Найти пару наименее удалённых из них.
  * Если в списке менее двух окружностей, бросить IllegalArgumentException
  */
-fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
+fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
+    if (circles.size < 2) throw IllegalArgumentException()
+    var resPair = Pair(-1, -1)
+    var d = Double.POSITIVE_INFINITY
+    for (i in circles.indices) {
+        for (j in 0 until i) {
+            val helper = circles[i].distance(circles[j])
+            if (helper < d) {
+                d = helper
+                resPair = Pair(j, i)
+            }
+        }
+    }
+    return Pair(circles[resPair.first], circles[resPair.second])
+}
 
 /**
  * Сложная
