@@ -208,13 +208,12 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    val e = IllegalArgumentException()
     val a = Regex("""(\d)+""").findAll(expression)
     val b = Regex("""[+-]""").findAll(expression)
     val num = mutableListOf<Int>()
     val pl = mutableListOf("+")
     var ans = 0
-    if (!expression.matches(Regex("""(\d+ [+-] )*\d+"""))) throw e
+    if (!expression.matches(Regex("""(\d+ [+-] )*\d+"""))) throw IllegalArgumentException()
     for (numbers in a) num.add(numbers.value.toInt())
     for (plusMin in b) pl.add(plusMin.value)
     for (i in num.indices) {
